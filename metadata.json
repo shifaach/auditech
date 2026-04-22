@@ -1,0 +1,7 @@
+{
+  "name": "AudiTech - AI Compliance Monitoring",
+  "description": "A production-grade audio and video logging system for media compliance, featuring AI-driven transcription, summarization, and automated content moderation using Gemini.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
