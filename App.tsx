@@ -20,6 +20,7 @@ import VideoDashboard from './pages/VideoDashboard';
 import ComplianceView from './pages/ComplianceView';
 import ReportsView from './pages/ReportsView';
 import UserManagement from './pages/UserManagement';
+import { Divide } from 'lucide-react';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -85,6 +86,7 @@ const App: React.FC = () => {
                   <div className="max-w-7xl mx-auto w-full p-4 lg:p-6 h-full min-h-0 flex flex-col">
                     <Toaster position="top-right" />
                     <div className="flex-1 min-h-0">
+                    <div className="min-h-screen overflow-x-hidden">
                       <Routes>
                         <Route path="/dashboard" element={<Dashboard user={user} />} />
                         <Route path="/audio" element={<AudioDashboard user={user} />} />
@@ -94,6 +96,7 @@ const App: React.FC = () => {
                         <Route path="/admin" element={<UserManagement user={user} />} />
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />
                       </Routes>
+                      </div>
                     </div>
                   </div>
                 </main>
