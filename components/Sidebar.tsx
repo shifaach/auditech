@@ -8,13 +8,30 @@ import { LogOut, ShieldCheck } from 'lucide-react';
 interface SidebarProps {
   user: UserProfile;
   onLogout: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
-
-const Sidebar: React.FC<SidebarProps> = ({ user, onLogout }) => {
-  const navigate = useNavigate();
+const Sidebar: React.FC<SidebarProps> = ({ user, onLogout, isOpen = false, onClose }) => {  const navigate = useNavigate();
 
   return (
-    <div className="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl">
+    <>
+    {/* Overlay (mobile only) */}
+    {isOpen && (
+      <div
+        className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        onClick={() => onClose && onClose()}
+      />
+    )}
+  
+  <div
+  className={`
+    fixed top-0 left-0 h-screen w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl z-50
+    transform transition-transform duration-300
+    ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+
+    lg:translate-x-0
+  `}
+>
       <div className="p-6 flex items-center gap-3">
         <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-900/50">
           <ShieldCheck className="w-6 h-6" />
@@ -61,6 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user, onLogout }) => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

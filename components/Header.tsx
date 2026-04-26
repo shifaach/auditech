@@ -6,9 +6,10 @@ import { useSearch } from "../context/SearchContext";
 interface HeaderProps {
   user: UserProfile;
   onLogout: () => void;
+  onMenuClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ user, onLogout, onMenuClick }) => {
   const { query, setQuery } = useSearch();
 
   const [showMenu, setShowMenu] = useState(false);
@@ -26,10 +27,16 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
   }, []);
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shadow-sm shrink-0">
-      
+<header className="h-16 bg-white border-b border-slate-200 px-4 lg:px-8 flex items-center justify-between w-full flex-shrink-0">      
+      <button 
+  onClick={onMenuClick}
+  className="lg:hidden mr-3 text-slate-700 text-2xl"
+>
+  ☰
+</button>
+
       {/* Search */}
-      <div className="relative w-96">
+      <div className="relative w-full max-w-xs lg:max-w-md">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
         <input
           type="text"

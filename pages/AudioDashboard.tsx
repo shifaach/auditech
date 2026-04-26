@@ -74,6 +74,8 @@ useEffect(() => {
     try {
       // 1. Upload file to Cloudinary
       const storageUrl = await uploadToCloudinary(file);
+      // 👉 Convert to WAV using Cloudinary
+const wavUrl = storageUrl.replace("/upload/", "/upload/f_wav/");
 
       // 2. Save metadata to Firestore
       log = await firebaseService.createLog({
@@ -85,21 +87,26 @@ useEffect(() => {
       await firebaseService.updateLogStatus(log.id, LogStatus.PROCESSING);
 
       // 3. Process with AI (use FileReader for base64 - compatible with all audio formats)
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = (reader.result as string)?.split(',')[1];
-          resolve(result || '');
-        };
-        reader.onerror = () => reject(reader.error);
-        reader.readAsDataURL(file);
-      });
+      // 👉 fetch converted WAV
+const response = await fetch(wavUrl);
+const blob = await response.blob();
+
+// 👉 convert to base64
+const base64 = await new Promise<string>((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const result = (reader.result as string)?.split(',')[1];
+    resolve(result || '');
+  };
+  reader.onerror = () => reject(reader.error);
+  reader.readAsDataURL(blob);
+});
 
       if (!base64) {
         throw new Error('Could not read audio file');
       }
 
-      const analysis = await transcribeAndAnalyze(base64, file.type, LogType.AUDIO);
+      const analysis = await transcribeAndAnalyze(base64, "audio/wav", LogType.AUDIO);
 
       // 4. Update status
       const cleanAnalysis = analysis ? JSON.parse(JSON.stringify(analysis)) : undefined;
@@ -182,7 +189,7 @@ useEffect(() => {
 }, [urlLogId, logs]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full animate-in slide-in-from-bottom-4 duration-500">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in slide-in-from-bottom-4 duration-500 lg:h-full lg:min-h-0 lg:overflow-hidden">
       {/* Left List */}
       <div className="lg:col-span-1 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
         <div className="p-6 border-b border-slate-100">
@@ -281,7 +288,7 @@ useEffect(() => {
       </div>
 
       {/* Right Analysis Panel */}
-      <div className="lg:col-span-2 flex flex-col gap-6">
+      <div className="lg:col-span-2 flex flex-col gap-6 lg:min-h-0 lg:overflow-y-auto">
         {selectedLog ? (
           <>
             <button

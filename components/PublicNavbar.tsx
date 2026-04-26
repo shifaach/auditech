@@ -9,7 +9,7 @@ const PublicNavbar: React.FC = () => {
 
   return (
     <nav className="w-full border-b border-slate-800 sticky top-0 bg-slate-900/95 backdrop-blur-md z-50">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
         {/* Left Side: Logo and Brand */}
         <Link to="/" className="flex items-center gap-3 group shrink-0">
           <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
@@ -19,9 +19,9 @@ const PublicNavbar: React.FC = () => {
         </Link>
 
         {/* Right Side: Navigation and Action */}
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-3 sm:gap-6">
           {/* Page Links */}
-          <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-bold text-slate-300">
+          <div className="flex overflow-x-auto gap-4 text-sm font-bold text-slate-300">
             <Link 
               to="/features" 
               className={`transition-colors py-2 border-b-2 ${isActive('/features') ? 'text-blue-400 border-blue-400' : 'hover:text-white border-transparent hover:border-slate-700'}`}
@@ -51,8 +51,7 @@ const PublicNavbar: React.FC = () => {
           {/* Sign In Button */}
           <Link 
             to="/login" 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-7 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg shadow-blue-900/20 active:scale-95 whitespace-nowrap"
-          >
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-7 py-2 rounded-full font-bold text-sm transition-all whitespace-nowrap"          >
             Sign In
           </Link>
         </div>

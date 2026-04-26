@@ -48,7 +48,7 @@ const ComplianceView: React.FC<{ user: UserProfile }> = ({ user }) => {
   }, [cases, location.search]);
   
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full animate-in fade-in duration-500">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in duration-500 lg:h-full lg:min-h-0 lg:overflow-hidden">
 
   {/* LEFT PANEL */}
   <div className="lg:col-span-1 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-y-auto">
@@ -95,7 +95,7 @@ const ComplianceView: React.FC<{ user: UserProfile }> = ({ user }) => {
   </div>
 
   {/* RIGHT PANEL */}
-  <div className="lg:col-span-2 flex flex-col gap-6">
+  <div className="lg:col-span-2 flex flex-col gap-6 lg:min-h-0 lg:overflow-y-auto">
 
     {selectedCase ? (
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">

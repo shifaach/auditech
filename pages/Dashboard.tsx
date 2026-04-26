@@ -141,7 +141,7 @@ if (data.length > 0) {
     {activeWarning && (
   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[999]">
     
-    <div className="bg-white rounded-2xl shadow-xl w-[400px] p-6">
+    <div className="bg-white rounded-2xl shadow-xl w-[90%] max-w-md p-6">
       
       <h2 className="text-lg font-bold text-red-600 mb-3">
         ⚠ Compliance Warning
@@ -177,7 +177,7 @@ if (data.length > 0) {
 )}
     <div className="space-y-8 animate-in fade-in duration-500">
     
-      <div className="flex items-center justify-between relative">
+    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative">
   <div>
     <h1 className="text-2xl font-bold text-slate-900">System Overview</h1>
     <p className="text-slate-500">
@@ -185,7 +185,7 @@ if (data.length > 0) {
     </p>
   </div>
 
-  <div className="flex items-center gap-6">
+  <div className="flex flex-wrap items-center gap-3">
 
     {/* 🔔 Notification Bell */}
     <div className="relative" ref={notificationRef}>
@@ -201,7 +201,7 @@ if (data.length > 0) {
       )}
 
       {showNotifications && (
-        <div className="absolute right-0 mt-3 w-80 bg-white border border-slate-200 rounded-xl shadow-lg p-4 z-50 max-h-96 overflow-y-auto">
+        <div className="absolute right-0 mt-3 w-[90vw] bg-white border border-slate-200 rounded-xl shadow-lg p-4 z-50 max-h-96 overflow-y-auto">
           <h3 className="text-sm font-bold text-slate-800 mb-3">
             Notifications
           </h3>
@@ -302,7 +302,7 @@ if (data.length > 0) {
 </button>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
+            <table className="min-w-[600px] w-full text-left">
               <thead className="bg-slate-50 text-slate-500 text-[10px] uppercase font-bold">
                 <tr>
                   <th className="px-6 py-4">Title</th>
@@ -480,7 +480,7 @@ if (data.length > 0) {
 
 <div
   onClick={(e) => e.stopPropagation()}
-  className="bg-white rounded-2xl p-6 w-[350px] space-y-5"
+  className="bg-white rounded-2xl p-6 w-[90%] max-w-sm space-y-5"
 >
 
       <h2 className="text-lg font-bold text-slate-900 text-center">

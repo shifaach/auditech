@@ -108,15 +108,15 @@ useEffect(() => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-top-4 duration-500 lg:h-full lg:min-h-0 lg:overflow-hidden">
+      <div className="flex items-center justify-between lg:flex-shrink-0">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Video Logging Hub</h1>
           <p className="text-slate-500">Monitor visual and auditory compliance for video broadcasts.</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:flex-1 lg:min-h-0 lg:overflow-hidden">
   
   {/* LEFT SIDE — Video Archives */}
   <div className="lg:col-span-1 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
@@ -171,7 +171,7 @@ useEffect(() => {
 
 
   {/* RIGHT SIDE — Analysis Panel */}
-  <div className="lg:col-span-2 flex flex-col gap-6">
+  <div className="lg:col-span-2 flex flex-col gap-6 lg:min-h-0 lg:overflow-y-auto">
 
     {selectedLog ? (
       <>

@@ -7,17 +7,34 @@ const FeaturesPage: React.FC = () => {
   return (
     <div className="animate-in fade-in duration-700">
       <div className="max-w-7xl mx-auto px-6 py-20">
-        <header className="max-w-3xl mb-24">
-          <div className="text-blue-500 font-bold uppercase tracking-widest text-sm mb-4">The Platform</div>
-          <h1 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight">
-            Next-Generation <br />
-            Monitoring Tech.
-          </h1>
-          <p className="text-xl text-slate-400 leading-relaxed max-w-2xl">
-            AudiTech leverages Gemini 3 Pro reasoning to provide unprecedented accuracy in broadcast logging, 
-            moving beyond simple storage to intelligent content awareness.
-          </p>
-        </header>
+      <header className="grid lg:grid-cols-2 gap-12 items-center mb-24">
+
+  {/* LEFT */}
+  <div className="max-w-3xl">
+    <div className="text-blue-500 font-bold uppercase tracking-widest text-sm mb-4">The Platform</div>
+    <h1 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight">
+      Next-Generation <br />
+      Monitoring Tech.
+    </h1>
+    <p className="text-xl text-slate-400 leading-relaxed max-w-2xl">
+      AudiTech leverages Gemini 3 Pro reasoning to provide unprecedented accuracy in broadcast logging, 
+      moving beyond simple storage to intelligent content awareness.
+    </p>
+  </div>
+
+  {/* RIGHT IMAGE */}
+  <div className="bg-slate-800 rounded-[2rem] overflow-hidden border border-slate-700 shadow-2xl">
+  <video 
+  src="/assets/demo.mp4"
+  autoPlay
+  loop
+  muted
+  className="w-full h-auto rounded-[2rem]"
+/>
+  </div>
+
+</header>
+        
 
         <div className="grid md:grid-cols-2 gap-16 lg:gap-24">
           {/* Feature 1 */}

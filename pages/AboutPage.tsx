@@ -27,12 +27,15 @@ const AboutPage: React.FC = () => {
               teams to focus on quality content production while ensuring legal peace of mind.
             </p>
           </div>
-          <div className="bg-slate-800 aspect-square rounded-[3rem] overflow-hidden relative border border-slate-700 shadow-2xl">
-             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-indigo-900/20" />
-             <div className="h-full flex items-center justify-center">
-                <ShieldCheck className="w-32 h-32 text-slate-700 animate-pulse" />
-             </div>
-          </div>
+          <div className="bg-slate-800 rounded-[3rem] overflow-hidden border border-slate-700 shadow-2xl">            <img 
+    src="/assets/mission.jpg"
+    alt="Mission"
+    className="w-full h-full object-contain"
+  />
+
+  {/* optional overlay for style */}
+ 
+</div>
         </div>
 
         <section className="bg-slate-800/40 p-8 md:p-12 rounded-[2.5rem] space-y-8 border border-slate-700/50">

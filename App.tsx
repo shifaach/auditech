@@ -25,6 +25,8 @@ const App: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   useEffect(() => {
     const storedUser = localStorage.getItem('auditech_session');
     if (storedUser) {
@@ -34,6 +36,7 @@ const App: React.FC = () => {
     }
     setLoading(false);
   }, []);
+
 
   const handleLogin = (profile: UserProfile) => {
     setUser(profile);
@@ -59,24 +62,42 @@ const App: React.FC = () => {
   return (
     <HashRouter>
       <SearchProvider>
-        <div className="min-h-screen flex flex-col overflow-x-hidden">
+        <>
           {user ? (
             <div className="flex h-screen overflow-hidden">
-              <Sidebar user={user} onLogout={handleLogout} />
-              <div className="flex-1 flex flex-col overflow-hidden">
-              <Header user={user} onLogout={handleLogout} />
-                <main className="flex-1 overflow-y-auto p-6 bg-slate-50">
-                  <Toaster position="top-right" />
-                  <Routes>
-                    <Route path="/dashboard" element={<Dashboard user={user} />} />
-                    <Route path="/audio" element={<AudioDashboard user={user} />} />
-                    <Route path="/video" element={<VideoDashboard user={user} />} />
-                    <Route path="/compliance" element={<ComplianceView user={user} />} />
-                    <Route path="/reports" element={<ReportsView user={user} />} />
-                    <Route path="/admin" element={<UserManagement user={user} />} />
-                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
-                  </Routes>
+              
+              <Sidebar 
+                user={user} 
+                onLogout={handleLogout} 
+                isOpen={sidebarOpen} 
+                onClose={() => setSidebarOpen(false)} 
+              />
+  
+              <div className="flex-1 flex flex-col min-w-0 lg:ml-64 overflow-hidden">
+                
+                <Header 
+                  user={user} 
+                  onLogout={handleLogout} 
+                  onMenuClick={() => setSidebarOpen(true)} 
+                />
+  
+                <main className="flex-1 overflow-y-auto bg-slate-50 min-h-0">
+                  <div className="max-w-7xl mx-auto w-full p-4 lg:p-6 h-full min-h-0 flex flex-col">
+                    <Toaster position="top-right" />
+                    <div className="flex-1 min-h-0">
+                      <Routes>
+                        <Route path="/dashboard" element={<Dashboard user={user} />} />
+                        <Route path="/audio" element={<AudioDashboard user={user} />} />
+                        <Route path="/video" element={<VideoDashboard user={user} />} />
+                        <Route path="/compliance" element={<ComplianceView user={user} />} />
+                        <Route path="/reports" element={<ReportsView user={user} />} />
+                        <Route path="/admin" element={<UserManagement user={user} />} />
+                        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                      </Routes>
+                    </div>
+                  </div>
                 </main>
+  
               </div>
             </div>
           ) : (
@@ -93,7 +114,7 @@ const App: React.FC = () => {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           )}
-        </div>
+        </>
       </SearchProvider>
     </HashRouter>
   );
