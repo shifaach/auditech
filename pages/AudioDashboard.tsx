@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserProfile, MediaLog, LogType, LogStatus } from '../types';
 import { firebaseService } from '../services/firebaseService';
 import { transcribeAndAnalyze } from '../services/gemini';
@@ -224,7 +224,7 @@ useEffect(() => {
           </label>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto mini-scroll">
         {logs
   .filter(log => {
     if (!archiveSearch) return true;
@@ -394,7 +394,7 @@ useEffect(() => {
                   <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Full Transcript</h3>
                   <div
                   ref={transcriptRef}
-                   className="text-sm text-slate-600 h-64 overflow-y-auto pr-2 leading-relaxed whitespace-pre-wrap"
+                   className="text-sm text-slate-600 h-64 overflow-y-auto pr-2 leading-relaxed whitespace-pre-wrap mini-scroll"
                    >
 
 {selectedLog.analysis?.transcript && (() => {

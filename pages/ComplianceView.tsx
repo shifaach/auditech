@@ -51,7 +51,7 @@ const ComplianceView: React.FC<{ user: UserProfile }> = ({ user }) => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in duration-500 lg:h-full lg:min-h-0 lg:overflow-hidden">
 
   {/* LEFT PANEL */}
-  <div className="lg:col-span-1 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-y-auto">
+  <div className="lg:col-span-1 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-y-auto mini-scroll">
 
     <div className="p-6 border-b border-slate-100">
       <h2 className="text-lg font-bold text-slate-900">Compliance Cases</h2>
@@ -95,7 +95,7 @@ const ComplianceView: React.FC<{ user: UserProfile }> = ({ user }) => {
   </div>
 
   {/* RIGHT PANEL */}
-  <div className="lg:col-span-2 flex flex-col gap-6 lg:min-h-0 lg:overflow-y-auto">
+  <div className="lg:col-span-2 flex flex-col gap-6 lg:min-h-0 lg:overflow-y-auto mini-scroll">
 
     {selectedCase ? (
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
