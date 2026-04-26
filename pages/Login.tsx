@@ -6,6 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebaseClient";
+import { motion } from 'framer-motion';
 
 interface LoginProps {
   onLogin: (profile: UserProfile) => void;
@@ -49,10 +50,20 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <motion.div
+  className="min-h-screen flex"
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6 }}
+>
       {/* Form Side */}
       <div className="flex-1 flex flex-col items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md space-y-8">
+      <motion.div
+  className="w-full max-w-md space-y-8"
+  initial={{ opacity: 0, scale: 0.95 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.5, delay: 0.2 }}
+>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl text-white shadow-xl shadow-blue-500/20 mb-6">
               <ShieldCheck className="w-10 h-10" />
@@ -90,7 +101,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               </div>
             </div>
 
-            <button type="submit" className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2">
+            <button 
+  type="submit" 
+  className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold 
+  hover:bg-slate-800 transition-all duration-300 
+  hover:scale-[1.02] active:scale-[0.97] 
+  shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2"
+>
               Sign In <ArrowRight className="w-5 h-5" />
             </button>
           </form>
@@ -100,7 +117,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               Need access? <Link to="/signup" className="text-blue-600 font-bold hover:underline">Create an account</Link>
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Visual Side */}
@@ -129,7 +146,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

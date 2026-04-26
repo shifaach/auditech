@@ -14,13 +14,15 @@ const PublicNavbar: React.FC = () => {
           <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
             <ShieldCheck className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">AudiTech</h1>
+          <h1 className="hidden sm:block text-2xl font-bold text-white tracking-tight">
+  AudiTech
+</h1>
         </Link>
 
         {/* Right Side: Navigation and Action */}
-        <div className="flex items-center gap-3 sm:gap-6">
+        <div className="flex items-center justify-between flex-1 ml-2 sm:ml-6">
           {/* Page Links */}
-          <div className="flex gap-2 sm:gap-4 text-xs sm:text-sm font-bold text-slate-300 whitespace-nowrap">            <Link 
+          <div className="flex flex-1 justify-center gap-3 sm:gap-6 text-xs sm:text-base font-bold text-slate-300 whitespace-nowrap">            <Link 
               to="/features" 
               className={`transition-colors py-2 border-b-2 ${isActive('/features') ? 'text-blue-400 border-blue-400' : 'hover:text-white border-transparent hover:border-slate-700'}`}
             >
@@ -49,7 +51,7 @@ const PublicNavbar: React.FC = () => {
           {/* Sign In Button */}
           <Link 
             to="/login" 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-6 py-2 rounded-full font-bold text-xs sm:text-sm transition-all whitespace-nowrap">
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2.5 rounded-full font-bold text-xs sm:text-base transition-all whitespace-nowrap shrink-0">
             Sign In
           </Link>
         </div>
