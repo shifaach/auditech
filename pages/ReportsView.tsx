@@ -7,6 +7,37 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useRef } from "react";
 
+const sendDebugLog = (payload: {
+  runId: string;
+  hypothesisId: string;
+  location: string;
+  message: string;
+  data: Record<string, unknown>;
+}) => {
+  fetch('http://127.0.0.1:7889/ingest/cd081d61-ec6b-491b-8c30-75e567418c65', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Debug-Session-Id': 'bac972',
+    },
+    body: JSON.stringify({
+      sessionId: 'bac972',
+      ...payload,
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  try {
+    navigator.sendBeacon(
+      'http://127.0.0.1:7889/ingest/cd081d61-ec6b-491b-8c30-75e567418c65',
+      JSON.stringify({
+        sessionId: 'bac972',
+        ...payload,
+        timestamp: Date.now(),
+      })
+    );
+  } catch (_) {}
+};
+
 const ReportsView: React.FC<{ user: UserProfile }> = ({ user }) => {
   const [logs, setLogs] = useState<MediaLog[]>([]);
   const [activeReport, setActiveReport] = useState<null | 'weekly' | 'violations' | 'logs' | 'insights'>(null);
@@ -24,6 +55,7 @@ const videoLogs = logs.filter(l => l.type === "VIDEO").length;
 const violationCount: any = {};
 
 const logsRef = useRef<HTMLDivElement | null>(null);
+const reportsScrollRef = useRef<HTMLDivElement | null>(null);
 
 logs.forEach(l => {
   l.analysis?.compliance_flags
@@ -42,6 +74,15 @@ const topViolation = Object.keys(violationCount).length
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const view = params.get("view");
+    // #region agent log
+    sendDebugLog({
+      runId: 'before-fix',
+      hypothesisId: 'H4-route-trigger',
+      location: 'pages/ReportsView.tsx:44',
+      message: 'Route view param inspected',
+      data: { view, search: location.search },
+    });
+    // #endregion
   
     if (view === "logs") {
       setActiveReport("logs");
@@ -52,22 +93,85 @@ const topViolation = Object.keys(violationCount).length
     const loadData = async () => {
       const data = await firebaseService.getLogs(undefined, user.role);
       setLogs(data);
+      // #region agent log
+      sendDebugLog({
+        runId: 'before-fix',
+        hypothesisId: 'H5-data-size',
+        location: 'pages/ReportsView.tsx:55',
+        message: 'Logs loaded for report view',
+        data: { count: data.length, role: user.role },
+      });
+      // #endregion
     };
     loadData();
   }, []);
 
   useEffect(() => {
+    const bodyStyle = window.getComputedStyle(document.body);
+    const htmlStyle = window.getComputedStyle(document.documentElement);
+    // #region agent log
+    sendDebugLog({
+      runId: 'before-fix',
+      hypothesisId: 'H1-global-overflow-lock',
+      location: 'pages/ReportsView.tsx:65',
+      message: 'Page overflow state sampled',
+      data: {
+        bodyOverflowY: bodyStyle.overflowY,
+        htmlOverflowY: htmlStyle.overflowY,
+        scrollY: window.scrollY,
+        innerHeight: window.innerHeight,
+        docScrollHeight: document.documentElement.scrollHeight,
+      },
+    });
+    // #endregion
+  }, [activeReport, logs.length]);
+
+  useEffect(() => {
     if (activeReport === "logs") {
       setTimeout(() => {
         if (logsRef.current) {
-          window.scrollTo({
-            top: logsRef.current.offsetTop - 80,
-            behavior: "smooth",
+          // #region agent log
+          sendDebugLog({
+            runId: 'before-fix',
+            hypothesisId: 'H2-scroll-target-invalid',
+            location: 'pages/ReportsView.tsx:84',
+            message: 'Auto-scroll target metrics',
+            data: {
+              offsetTop: logsRef.current.offsetTop,
+              activeReport,
+              logsCount: logs.length,
+            },
           });
+          // #endregion
+          const scrollContainer = reportsScrollRef.current;
+          if (scrollContainer) {
+            const containerTop = scrollContainer.getBoundingClientRect().top;
+            const targetTop = logsRef.current.getBoundingClientRect().top - containerTop + scrollContainer.scrollTop - 16;
+            scrollContainer.scrollTo({ top: targetTop, behavior: "smooth" });
+          } else {
+            window.scrollTo({
+              top: logsRef.current.offsetTop - 80,
+              behavior: "smooth",
+            });
+          }
+          // #region agent log
+          sendDebugLog({
+            runId: 'before-fix',
+            hypothesisId: 'H3-scroll-command-executed',
+            location: 'pages/ReportsView.tsx:102',
+            message: 'window.scrollTo executed for logs section',
+            data: {
+              usedContainerScroll: Boolean(scrollContainer),
+              containerScrollTop: scrollContainer?.scrollTop ?? null,
+              targetOffsetTop: logsRef.current.offsetTop - 80,
+              resultingScrollY: window.scrollY,
+            },
+          });
+          // #endregion
         }
       }, 300); // 👈 important delay
     }
-  }, [activeReport]);
+  }, [activeReport, logs.length]);
 
   const downloadCSV = () => {
     const headers = ['ID', 'Title', 'Type', 'Status', 'Violations', 'Emotion', 'Noise', 'Created At'];
@@ -95,7 +199,7 @@ const topViolation = Object.keys(violationCount).length
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div ref={reportsScrollRef} className="space-y-8 animate-in fade-in duration-500 h-full overflow-y-auto pr-1">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Audit Reports</h1>
@@ -152,6 +256,15 @@ const topViolation = Object.keys(violationCount).length
               <button
   key={i}
   onClick={() => {
+    // #region agent log
+    sendDebugLog({
+      runId: 'before-fix',
+      hypothesisId: 'H6-button-click-path',
+      location: 'pages/ReportsView.tsx:174',
+      message: 'Quick export preset clicked',
+      data: { index: i, label: p.label, previousActiveReport: activeReport },
+    });
+    // #endregion
     if (i === 0) setActiveReport('weekly');
     if (i === 1) setActiveReport('violations');
     if (i === 2) setActiveReport('logs');

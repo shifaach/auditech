@@ -20,7 +20,6 @@ import VideoDashboard from './pages/VideoDashboard';
 import ComplianceView from './pages/ComplianceView';
 import ReportsView from './pages/ReportsView';
 import UserManagement from './pages/UserManagement';
-import { Divide } from 'lucide-react';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -82,7 +81,7 @@ const App: React.FC = () => {
                 />
   
                 <main className="flex-1 overflow-hidden bg-slate-50 min-h-0">
-                  <div className="max-w-7xl mx-auto w-full p-4 lg:p-6 h-full min-h-0 flex flex-col">
+                  <div className="max-w-[96rem] mx-auto w-full px-3 py-3 sm:px-4 sm:py-4 lg:px-5 lg:py-5 h-full min-h-0 flex flex-col">
                     <Toaster position="top-right" />
                     <div className="flex-1 min-h-0">
                     <div className="h-full min-h-0 overflow-hidden overflow-x-hidden">

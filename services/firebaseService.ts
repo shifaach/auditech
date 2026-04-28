@@ -98,27 +98,39 @@ export const firebaseService = {
       updateData.analysis = JSON.parse(JSON.stringify(analysis));
 
       if (analysis.compliance_flags?.length) {
-
         const logSnap = await getDoc(doc(db, LOGS_COLLECTION, id));
+        if (!logSnap.exists()) return;
 
-if (!logSnap.exists()) return;
+        const logData = logSnap.data();
+        const flaggedItems = analysis.compliance_flags.filter(
+          (flag) => flag.category !== "safe"
+        );
 
-const logData = logSnap.data();
+        if (flaggedItems.length > 0) {
+          const detectedPhrases = Array.from(
+            new Set(
+              flaggedItems
+                .map((flag) => String(flag.detected_text || "").trim())
+                .filter(Boolean)
+            )
+          );
+          const violationTypes = Array.from(
+            new Set(flaggedItems.map((flag) => flag.category))
+          );
 
-for (const flag of analysis.compliance_flags) {
-  if (flag.category !== "safe") {
-    await firebaseService.createComplianceCase({
-      log_id: id,
-      user_id: logData.user_id,
-      title: logData.title,
-      content_type: logData.type,   // 🔥 no fallback
-      violation_type: flag.category,
-      detected_text: flag.detected_text,
-      confidence: flag.confidence,
-      timestamp: flag.timestamp || null,
-    });
-  }
-}
+          await firebaseService.createComplianceCase({
+            log_id: id,
+            user_id: logData.user_id,
+            title: logData.title,
+            content_type: logData.type,
+            violation_type: violationTypes.join(", "),
+            violation_types: violationTypes,
+            detected_text: detectedPhrases.join(" | "),
+            detected_phrases: detectedPhrases,
+            confidence: Math.max(...flaggedItems.map((flag) => flag.confidence || 0)),
+            timestamp: flaggedItems[0]?.timestamp || null,
+          });
+        }
       }
     }
 
@@ -222,6 +234,11 @@ return data;
       ...updates,
       updated_at: serverTimestamp(),
     });
+  },
+
+  deleteComplianceCase: async (caseId: string): Promise<void> => {
+    const caseRef = doc(db, "compliance_cases", caseId);
+    await deleteDoc(caseRef);
   },
 
   updateUser: async (

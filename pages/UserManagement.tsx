@@ -7,8 +7,6 @@ import { firebaseService } from "../services/firebaseService";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../services/firebaseClient";
 import { doc, setDoc } from "firebase/firestore";
-import { useRef } from "react";
-
 const UserManagement: React.FC<{ user: UserProfile }> = ({ user }) => {
   if (user.role !== UserRole.ADMIN) {
     return (
@@ -21,7 +19,6 @@ const UserManagement: React.FC<{ user: UserProfile }> = ({ user }) => {
       </div>
     );
   }
-  const menuRef = useRef<HTMLDivElement | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   const [showModal, setShowModal] = useState(false);
@@ -46,10 +43,8 @@ useEffect(() => {
 
 useEffect(() => {
   const handleClickOutside = (event: MouseEvent) => {
-    if (
-      menuRef.current &&
-      !menuRef.current.contains(event.target as Node)
-    ) {
+    const target = event.target as HTMLElement | null;
+    if (!target?.closest("[data-user-actions-root='true']")) {
       setActiveMenu(null);
     }
   };
@@ -112,7 +107,7 @@ useEffect(() => {
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right">
-                <div className="relative" ref={menuRef}>
+                <div className="relative" data-user-actions-root="true">
   <button
     onClick={() =>
       setActiveMenu(activeMenu === u.id ? null : u.id)
@@ -131,10 +126,18 @@ useEffect(() => {
           const newRole = prompt("Enter role: ADMIN / COMPLIANCE_OFFICER / STANDARD_USER");
 
           if (!newRole) return;
+          const normalizedRole = newRole.trim().toUpperCase() as UserRole;
+          const isValidRole =
+            normalizedRole === UserRole.ADMIN ||
+            normalizedRole === UserRole.COMPLIANCE_OFFICER ||
+            normalizedRole === UserRole.STANDARD_USER;
 
-          await firebaseService.updateUser(u.id, {
-            role: newRole,
-          });
+          if (!isValidRole) {
+            alert("Invalid role. Use: ADMIN / COMPLIANCE_OFFICER / STANDARD_USER");
+            return;
+          }
+
+          await firebaseService.updateUser(u.id, { role: normalizedRole });
 
           const data = await firebaseService.getUsers();
           setUsers(data);
@@ -151,7 +154,7 @@ useEffect(() => {
         onClick={async () => {
           if (!window.confirm("Delete this user?")) return;
 
-          await firebaseService.deleteUser?.(u.id);
+          await firebaseService.deleteUser(u.id);
 
           const data = await firebaseService.getUsers();
           setUsers(data);

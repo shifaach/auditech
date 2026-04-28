@@ -17,6 +17,11 @@ const ComplianceView: React.FC<{ user: UserProfile }> = ({ user }) => {
   const [cases, setCases] = useState<any[]>([]);
   const [selectedCase, setSelectedCase] = useState<any | null>(null);
   const navigate = useNavigate();
+  const triggerPhrases = Array.isArray(selectedCase?.detected_phrases)
+    ? selectedCase.detected_phrases.filter(Boolean)
+    : selectedCase?.detected_text
+    ? [selectedCase.detected_text]
+    : [];
 
   useEffect(() => {
     loadCases();
@@ -122,11 +127,19 @@ const ComplianceView: React.FC<{ user: UserProfile }> = ({ user }) => {
         {/* Trigger */}
         <div>
           <p className="text-xs font-bold text-slate-400 uppercase mb-2">
-            Triggered Phrase
+            Triggered Phrase{triggerPhrases.length > 1 ? "s" : ""}
           </p>
-          <p className="italic text-slate-700">
-            "{selectedCase.detected_text}"
-          </p>
+          <div className="space-y-1">
+            {triggerPhrases.length > 0 ? (
+              triggerPhrases.map((phrase: string, idx: number) => (
+                <p key={`${phrase}-${idx}`} className="italic text-slate-700">
+                  "{phrase}"
+                </p>
+              ))
+            ) : (
+              <p className="italic text-slate-500">No trigger phrase found.</p>
+            )}
+          </div>
         </div>
 
         {/* Confidence */}
@@ -495,6 +508,32 @@ setSelectedCase({
   <span className="px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg text-sm font-bold">
     Assigned
   </span>
+)}
+
+{user.role === "ADMIN" && (
+  <button
+    onClick={async () => {
+      if (!selectedCase) return;
+      if (!window.confirm("Delete this compliance case?")) return;
+
+      try {
+        const deletedCaseId = selectedCase.id;
+        await firebaseService.deleteComplianceCase(deletedCaseId);
+
+        const updatedCases = await firebaseService.getComplianceCases(user.id, user.role);
+        setCases(updatedCases);
+
+        const nextSelected = updatedCases.find((c) => c.id !== deletedCaseId) || null;
+        setSelectedCase(nextSelected);
+      } catch (error) {
+        console.error(error);
+        alert("Failed to delete compliance case");
+      }
+    }}
+    className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-red-700"
+  >
+    Delete Case
+  </button>
 )}
 
 {user.role === "COMPLIANCE_OFFICER" &&
